@@ -1,0 +1,62 @@
+<program> ::= <statement-list>
+
+<statement-list> ::= <statement> | <statement> <statement-list>
+
+<statement> ::= <variable-declaration>
+              | <assignment>
+              | <if-statement>
+              | <while-loop>
+              | <function-declaration>
+              | <function-call>
+              | <return-statement>
+              | <output-statement>
+
+<variable-declaration> ::= "let" <identifier> [":" <type>] "=" <expression> ";"
+
+<assignment> ::= <identifier> "=" <expression> ";"
+
+<if-statement> ::= "if" "(" <expression> ")" <block> [ "else" <block> ]
+
+<while-loop> ::= "while" "(" <expression> ")" <block>
+
+<function-declaration> ::= "function" <identifier> "(" <parameter-list> ")" <block>
+
+<parameter-list> ::= <parameter> | <parameter> "," <parameter-list> | ""
+<parameter> ::= <identifier> ":" <type>
+
+<function-call> ::= <identifier> "(" <argument-list> ")" ";"
+<argument-list> ::= <expression> | <expression> "," <argument-list> | ""
+
+<return-statement> ::= "return" <expression> ";"
+
+<output-statement> ::= "print" "(" <expression> ")" ";"
+
+<block> ::= "{" <statement-list> "}"
+
+<expression> ::= <term> | <expression> <add-op> <term>
+
+<term> ::= <factor> | <term> <mul-op> <factor>
+
+<factor> ::= <identifier> | <literal> | "(" <expression> ")"
+
+<add-op> ::= "+" | "-"
+<mul-op> ::= "*" | "/" | "%"
+
+<type> ::= "Integer" | "Float" | "Boolean" | "String"
+
+<literal> ::= <integer-literal> | <float-literal> | <boolean-literal> | <string-literal>
+
+<integer-literal> ::= <digit> <digit-seq>
+<digit-seq> ::= <digit> | <digit> <digit-seq>
+<digit> ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+<float-literal> ::= <integer-literal> "." <digit-seq>
+
+<boolean-literal> ::= "true" | "false"
+
+<string-literal> ::= "\"" <char-seq> "\""
+<char-seq> ::= <char> | <char> <char-seq>
+<char> ::= any printable character except "\""
+
+<identifier> ::= <letter> | <letter> <id-seq>
+<id-seq> ::= <letter> | <digit> | <letter> <id-seq> | <digit> <id-seq>
