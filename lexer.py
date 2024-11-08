@@ -33,44 +33,40 @@ TOKEN_SPECS = [
 for op_type, patterns in OPERATORS.items():
     TOKEN_SPECS.append((op_type, r'(?:' + '|'.join(patterns) + r')'))
 
-# Compile all regex patterns for each token type
-token_regex = [(name, re.compile(pattern)) for name, pattern in TOKEN_SPECS]
+# Combine all regex patterns into one pattern with named groups
+tok_regex = '|'.join(f'(?P<{name}>{pattern})' for name, pattern in TOKEN_SPECS)
 
 def tokenize_file(file_path):
-    """ Tokenize the given file, returning a list of (token_type, token_value, line_number, column) tuples. """
-    tokens = []
-    line_number = 1
-
+    """Tokenize input from a .txt file and output tokens to a tokens.txt file."""
     with open(file_path, 'r') as file:
         code = file.read()
 
-    position = 0
-    while position < len(code):
-        # Handle multi-line comments explicitly
-        if code[position:position+2] == '/*':
-            end_comment = code.find('*/', position + 2)
-            if end_comment == -1:
-                raise SyntaxError(f"Unterminated multi-line comment at line {line_number}")
-            # Move the position past the end of the comment
-            position = end_comment + 2
-            continue
+    tokens = []
+    line_num = 1
+    line_start = 0
 
-        match = None
-        for token_type, regex in token_regex:
-            match = regex.match(code, position)
-            if match:
-                token_value = match.group(0)
-                if token_type == "NEWLINE":
-                    line_number += 1
-                elif token_type not in {"WHITESPACE", "COMMENT"}:
-                    # Only add meaningful tokens
-                    column = position + 1
-                    tokens.append((token_type, token_value, line_number, column))
-                position = match.end(0)
-                break
+    for match_object in re.finditer(tok_regex, code):
+        kind = match_object.lastgroup
+        value = match_object.group(kind)
+        column = match_object.start() - line_start + 1  # Calculate the column number
 
-        if not match:
-            raise SyntaxError(f"Illegal character '{code[position]}' at line {line_number}, column {position + 1}")
+        if kind == 'NEWLINE':
+            line_start = match_object.end()
+            line_num += 1
+        elif kind == 'WHITESPACE':
+            continue  # Ignore whitespace
+        elif kind == 'MISMATCH':
+            raise RuntimeError(f'Unexpected character {value!r} on line {line_num}, column {column}')
+        else:
+            tokens.append((kind, value, line_num, column))
+
+    # Append EOF token at the end
+    tokens.append(('EOF', '', line_num, column + 1))
+
+    # Write tokens to output file
+    with open('tokens.txt', 'w') as file:
+        for token in tokens:
+            file.write(f'{token}\n')
 
     return tokens
 
@@ -79,7 +75,7 @@ Example usage: Tokenize code from a .txt file
 Note: 'file_path' should contain the file extension at the end of the file name
 e.g: file_name.file_extension
 '''
-file_path = 'code.txt'
+file_path = 'F:\Programming\Collage\Compiler Design\Compiler Project\code.txt'
 tokens = tokenize_file(file_path)
 
 for token in tokens:
