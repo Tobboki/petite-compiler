@@ -7,7 +7,6 @@ The function then constructs a string with the relevant lines from the text and 
 """
 def string_with_arrows(text,pos_start,pos_end):
     result=''
-
     idx_start=max(text.rfind('\n',0,pos_start.idx),0)
     idx_end=text.find('\n',idx_start+1)
 
