@@ -3,7 +3,7 @@
 
 <term>    ::= <factor> (("*" | "/") <factor>)*
 
-<factor>  ::= ("+" | "-") <factor>
+<factor>  ::= ("+" | "-") <factor> | <DIGIT>
            
 
 
