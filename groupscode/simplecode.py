@@ -3,6 +3,7 @@ import string
 # تعريف الثوابت
 DIGITS = '0123456789'
 LETTERS = string.ascii_letters
+
 LETTERS_DIGITS = LETTERS + DIGITS
 
 TT_INT = 'INT'
@@ -12,7 +13,19 @@ TT_MINUS = 'MINUS'
 TT_MUL = 'MUL'
 TT_DIV = 'DIV'
 TT_EOF = 'EOF'
-
+class Error:
+    def __init__(self,pos_start,pos_end,error_name,details):
+        self.pos_start=pos_start
+        self.pos_end=pos_end
+        self.error_name=error_name
+        self.details=details
+    def __repr__(self):
+        return f"{self.error_name}{self.details}"
+    
+    
+class InvalidSyntaxError(Error):
+    def __init__(self, pos_start, pos_end, details):
+        super().__init__(pos_start, pos_end, "InvalidSyntax", details)
 class Token:
     def __init__(self, type_, value=None):
         self.type = type_
@@ -73,7 +86,18 @@ class BinOpNode:
 
     def __repr__(self):
         return f"({self.left} {self.op} {self.right})"
-
+    
+class ParseResult:
+    def __init__(self):
+        self.error=None
+        self.node=None
+    def register(self,res):
+        if isinstance(res,ParseResult):
+            if res.error:
+                self.error=res.error
+            return res.node
+        return res
+    
 
 class Parser:
     def __init__(self, tokens):
@@ -91,6 +115,8 @@ class Parser:
             tok = self.current_tok
             self.advance()
             return numberNode(tok)
+        else:
+            raise InvalidSyntaxError(None, None, f"Expected integer, got '{self.current_tok.type}'")
 
     def bin_op(self, func, ops):
         left = func()
@@ -110,7 +136,7 @@ class Parser:
 
 if __name__ == "__main__":
     # اختبار Lexer
-    text = "5 + 3 * 6*6+7"
+    text = "5+"
     lexer = Lex(text)
     tokens = lexer.make_tokens()
     print("lexer:", tokens)
