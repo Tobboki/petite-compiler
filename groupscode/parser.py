@@ -44,8 +44,6 @@ class ParseResult:
 		return self
 
 
-
-
 class Parser:
 	def __init__(self, tokens):
 		self.tokens = tokens
@@ -67,11 +65,6 @@ class Parser:
 			))
 		return res
 
-
-	
-
-		
-	
 
 	def factor(self):
 		res = ParseResult()
@@ -177,23 +170,23 @@ class Parser:
 
 		return res.success(left)
 
-# def run(fn, text):
-# 		# Generate tokens
+def run(fn, text):
+		# Generate tokens
 		
-# 		lexer1 = lexer.Lex(fn, text)
-# 		tokens, error = lexer1.make_tokens()
-# 		if error: return None, error
+		lexer1 = lexer.Lex(fn, text)
+		tokens, error = lexer1.make_tokens()
+		if error: return None, error
 		
-# 		# Generate AST
-# 		parser = Parser(tokens)
-# 		ast = parser.parse()
-# 		if ast.error:
-# 			return None, ast.error
-# 		return ast.node, None
-# while True:
-#     text = input('basic > ')
-#     result, error = run('<stdin>', text)
-#     if error:
-#         print(error.as_string())
-#     else:
-#         print(result)
+		# Generate AST
+		parser = Parser(tokens)
+		ast = parser.parse()
+		if ast.error:
+			return None, ast.error
+		return ast.node, None
+while True:
+    text = input('basic > ')
+    result, error = run('<stdin>', text)
+    if error:
+        print(error.as_string())
+    else:
+        print(result)

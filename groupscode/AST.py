@@ -14,6 +14,8 @@ class VarAccessNode:
 
 		self.pos_start = self.var_name_tok.pos_start
 		self.pos_end = self.var_name_tok.pos_end
+	def __repr__(self):
+		return f'({self.var_name_tok})'
 
 class VarAssignNode:
 	def __init__(self, var_name_tok, value_node):

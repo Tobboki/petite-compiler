@@ -166,15 +166,15 @@ class Lex:
 
 
 
-def run(fn, text):
-    lexer = Lex(fn, text)
-    tokens, error = lexer.make_tokens()
+# def run(fn, text):
+#     lexer = Lex(fn, text)
+#     tokens, error = lexer.make_tokens()
 
-    return tokens, error
+#     return tokens, error
 
-while True:
-    text = input('basic > ')
-    result, error = run('<stdin>', text)
+# while True:
+#     text = input('basic > ')
+#     result, error = run('<stdin>', text)
 
-    if error: print(error.as_string())
-    else: print(result)
+#     if error: print(error.as_string())
+#     else: print(result)
